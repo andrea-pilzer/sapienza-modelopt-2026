@@ -1,0 +1,3 @@
+[submodule "Model-Optimizer"]
+	path = Model-Optimizer
+	url = https://github.com/andrea-pilzer/Model-Optimizer.git
