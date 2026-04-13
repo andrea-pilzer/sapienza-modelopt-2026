@@ -14,6 +14,7 @@ using NVIDIA A100-SXM-64 GB GPUs.
 ## Clone Repository
 
 ```bash
+cd $SCRATCH
 git clone --recurse-submodules https://github.com/andrea-pilzer/sapienza-modelopt-2026.git
 ```
 
@@ -84,12 +85,7 @@ Note the compute node hostname (e.g. `lrdn2191`).
 **3.** Start Jupyter inside the Singularity container on the compute node:
 
 ```bash
-singularity exec --nv \
-  --bind $CINECA_SCRATCH/assets/hf_cache:/workspace/hf_cache \
-  --bind $CINECA_SCRATCH/course:/workspace/model-opt \
-  $CINECA_SCRATCH/assets/pytorch_26.03-py3.sif \
-  jupyter notebook --port=9999 --no-browser --ip=0.0.0.0 \
-    --notebook-dir=/workspace/model-opt
+singularity exec --nv --bind $SCRATCH/assets:/workspace/assets --bind $SCRATCH/sapienza-modelopt-2026:/workspace/sapienza-modelopt-2026 $SCRATCH/assets/pytorch_26.03-py3.sif   jupyter notebook --port=9999 --no-browser --ip=0.0.0.0     --notebook-dir=/workspace
 ```
 
 **4.** On your laptop, open a second terminal and create the SSH tunnel:
