@@ -77,10 +77,16 @@ ssh USERNAME@login01-ext.leonardo.cineca.it
 
 ```bash
 srun -t 120 -N 1 --ntasks-per-node 1 --cpus-per-task 4 --mem=64gb \
-     --gres=gpu:1 -p boost_usr_prod -A tra26_sapai --pty /usr/bin/bash
+     --gres=gpu:1 -p boost_usr_prod -A tra26_sapai --reservation s_tra_sapai1 --pty /usr/bin/bash
 ```
 
 Note the compute node hostname (e.g. `lrdn2191`).
+
+Different reservations are created one for each day. Therefore, the values for the --reservation option are:
+```
+14 April: s_tra_sapai1
+15 April: s_tra_sapai2
+```
 
 **3.** Start Jupyter inside the Singularity container on the compute node:
 
@@ -126,7 +132,7 @@ using **DistributedDataParallel (DDP)** with MPI, training ResNet-18 on CIFAR-10
 ```bash
 # 1. Get an interactive node
 salloc -N 1 --ntasks-per-node 2 --cpus-per-task 8 --gres=gpu:2 \
-       --mem=32gb -A tra26_sapai -p boost_usr_prod -t 01:00:00
+       --mem=32gb -A tra26_sapai -p boost_usr_prod -t 01:00:00 --reservation s_tra_sapai1
 
 # 2. Load modules
 module load profile/deeplrn cineca-ai
