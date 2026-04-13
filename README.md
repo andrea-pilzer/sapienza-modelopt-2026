@@ -32,22 +32,21 @@ git submodule update --init --recursive
 The notebooks require pre-downloaded model weights and a Singularity container image.
 These are large files (tens of GB) and are **not** stored in this repository.
 
-Your instructor will make them available on Leonardo at a shared path.
-Copy the assets to your SCRATCH space:
-
-```bash
-cp -r <SHARED_ASSETS_PATH> $CINECA_SCRATCH/assets
+The course assets (Singularity image, model weights, datasets) are staged at:
+```
+/leonardo/pub/userexternal/apilzer0/assets/
 ```
 
-Then run the one-time setup script (from the repo root on a **login node**):
+Run the one-time setup script **from the repo root on a login node**. It will copy the assets
+to your scratch space and install the required Python packages:
 
 ```bash
 bash setup.sh
 ```
 
 This script will:
-1. Verify the Singularity image and HuggingFace model cache are in place
-2. Clone the `Model-Optimizer` submodule if not already present
+1. Copy assets from the shared path to `$CINECA_SCRATCH/assets/` (~20 GB, 2–3 min)
+2. Initialise the `Model-Optimizer` git submodule
 3. Install additional Python packages (`nvidia-modelopt`, `diffusers`) via `pip install --user`
    inside the container — writes only to `~/.local`, does not modify the container image
 
@@ -87,7 +86,7 @@ Note the compute node hostname (e.g. `lrdn2191`).
 ```bash
 singularity exec --nv \
   --bind $CINECA_SCRATCH/assets/hf_cache:/workspace/hf_cache \
-  --bind $(pwd):/workspace/model-opt \
+  --bind $CINECA_SCRATCH/course:/workspace/model-opt \
   $CINECA_SCRATCH/assets/pytorch_26.03-py3.sif \
   jupyter notebook --port=9999 --no-browser --ip=0.0.0.0 \
     --notebook-dir=/workspace/model-opt
@@ -95,12 +94,17 @@ singularity exec --nv \
 
 **4.** On your laptop, open a second terminal and create the SSH tunnel:
 
+Check the node you are using:
+```
+squeue --me
+```
+Pick the last bit, something like `lrdnXXXX` and put it in the command below
 ```bash
 ssh -L 9999:localhost:9999 USERNAME@login01-ext.leonardo.cineca.it \
-    ssh -L 9999:localhost:9999 -N lrdn2191
+    ssh -L 9999:localhost:9999 -N lrdnXXXX
 ```
 
-Replace `lrdn2191` with the actual compute node name from step 2.
+Replace `lrdnXXXX` with the actual compute node name from step 2.
 
 **5.** Open your browser at the URL printed by Jupyter (step 3):
 
