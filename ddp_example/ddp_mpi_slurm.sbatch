@@ -1,12 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=DDP_MPI
-#SBATCH --partition=boost_usr_prod
-#SBATCH --time=00:10:00
-#SBATCH -A cin_extern02_1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
 #SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=8
+#SBATCH -A tra26_sapai
+#SBATCH --reservation s_tra_sapai1
+#SBATCH --partition=boost_usr_prod
+#SBATCH --time=00:10:00
 
 GPUS_PER_NODE=4
 
