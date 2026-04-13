@@ -124,20 +124,24 @@ using **DistributedDataParallel (DDP)** with MPI, training ResNet-18 on CIFAR-10
 
 | File | Description |
 |------|-------------|
+| `ddp_example/init.py`  |  Initialization script — download cifar-10 dataset  |
 | `ddp_example/ddp_mpi.py` | Training script — supports MPI and SLURM launchers, mixed precision (`GradScaler`), channels-last, and `ZeroRedundancyOptimizer` |
 | `ddp_example/ddp_mpi_slurm.sbatch` | SLURM batch script — 4 GPUs on 1 node via `mpirun` |
 
 **Run interactively (2 GPUs, 1 node):**
 
 ```bash
-# 1. Get an interactive node
+# 1. Load environment
+module load profile/deeplrn cineca-ai
+
+# 2. Initialize dataset (NB: from login node)
+python init.py
+
+# 3. Get an interactive node
 salloc -N 1 --ntasks-per-node 2 --cpus-per-task 8 --gres=gpu:2 \
        --mem=32gb -A tra26_sapai -p boost_usr_prod -t 01:00:00 --reservation s_tra_sapai1
 
-# 2. Load modules
-module load profile/deeplrn cineca-ai
-
-# 3. Launch
+# 4. Launch
 mpirun -np 2 \
   -x MASTER_ADDR=$(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n 1) \
   -x MASTER_PORT=11234 -x PATH \
