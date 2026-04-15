@@ -10,6 +10,8 @@ __pycache__/
 
 # Local outputs
 exports/
+scripts/benchmark_throughput.py
+scripts/__pycache__/
 leo_results/
 saved_models/
 data/
